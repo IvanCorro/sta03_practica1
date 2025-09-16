@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "nombre": "Thriller",
+    "año_publicacion": 1982,
+    "artistas": [1, 2]
+  },
+  {
+    "id": 2,
+    "nombre": "The Dark Side of the Moon",
+    "año_publicacion": 1973,
+    "artistas": [3]
+  },
+  {
+    "id": 3,
+    "nombre": "Abbey Road",
+    "año_publicacion": 1969,
+    "artistas": [4]
+  },
+  {
+    "id": 4,
+    "nombre": "Bad",
+    "año_publicacion": 1987,
+    "artistas": [1]
+  },
+  {
+    "id": 5,
+    "nombre": "The Wall",
+    "año_publicacion": 1979,
+    "artistas": [3]
+  }
+]

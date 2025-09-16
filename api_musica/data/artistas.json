@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "nombre_completo": "Michael Jackson",
+    "año_nacimiento": 1958
+  },
+  {
+    "id": 2,
+    "nombre_completo": "Quincy Jones",
+    "año_nacimiento": 1933
+  },
+  {
+    "id": 3,
+    "nombre_completo": "Pink Floyd",
+    "año_nacimiento": 1965
+  },
+  {
+    "id": 4,
+    "nombre_completo": "The Beatles",
+    "año_nacimiento": 1960
+  }
+]
