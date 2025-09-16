@@ -1,0 +1,10 @@
+GET /api/album/:name -> Buscar un album
+POST /api/album -> Crear un album
+DELETE /api/album/:name -> Borrar un album
+POST /api/album/:name -> Modificar un album
+
+POST /api/artista/ -> Crear  artista
+DELETE /api/artista/:name -> Borrar artista
+POST /api/astista/:name -> Modificar artista
+
+Los de modificar igual con PATCH
