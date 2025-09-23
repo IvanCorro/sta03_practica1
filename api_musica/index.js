@@ -31,11 +31,10 @@ async function guardarAlbumes(albumes){
 
 //donde se configuran los endpoints (la API en si)
 
-//ALBUMES
 app.get('/', (req, res) => {
     res.send('Node JS api musical Iván y Gaby');
 });
-
+    //ALBUMES
 app.get('/api/album/:nombre', async (req, res) => {
     const albumes = await leerAlbumes();
     const album = albumes.find(c => c.nombre === req.params.nombre);
@@ -81,7 +80,7 @@ app.patch('/api/album/:nombre', async (req, res) => {
 
 });
 
-//ARTISTAS
+    //ARTISTAS
 app.get('/api/artista/:id', async (req, res) => {
     const artistas = await leerArtistas();
     const artista = artistas.find(c => c.id === parseInt(req.params.id));
@@ -108,11 +107,23 @@ app.delete('/api/artista/:nombre', async (req, res) => {
     if (!artista) return res.status(404).send('Artista no encontrado');
 
     artistas = artistas.filter(c => c.nombre !== artista.nombre);
+   
     await guardarArtistas(artistas);
     res.send(artista);
-
 });
 
+app.patch('/api/artista/:nombre', async (req, res) => {
+    let artistas = await leerArtistas();
+    const artista = artistas.find(c => c.nombre === req.params.nombre);
+    if (!artista) return res.status(404).send('Artista no encontrado');
+
+    if (req.body.nombre !== undefined) artista.nombre = req.body.nombre;
+    if (req.body.año_nacimiento !== undefined) artista.año_nacimiento = parseInt(req.body.año_nacimiento);
+    if (req.body.artistas !== undefined) artista.artistas = req.body.artistas;
+
+    await guardarArtistas(artistas);
+    res.send(artista);
+});
 //establecer los puertos por los que accederemos
 const port = process.env.port || 80;
 app.listen(port, () => console.log(`Listening - port ${port}`));
