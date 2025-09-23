@@ -1,4 +1,3 @@
-
 const express = require('express');
 const fs = require('fs').promises;
 const app = express();
@@ -30,38 +29,22 @@ async function guardarAlbumes(albumes){
     await fs.writeFile('albumes.json', data, 'utf8');
 }
 
-async function readAlbumes() {
-    const data = await fs.readFile('albumes.json', 'utf8');
-    return JSON.parse(data);
-}
-
-async function saveAlbumes(albumes) {
-    await fs.writeFile('albumes.json', JSON.stringify(albumes, null, 4));
-}
-
-async function readArtistas() {
-    const data = await fs.readFile('artistas.json', 'utf8');
-    return JSON.parse(data);
-}
-
-async function saveArtistas(artistas) {
-    await fs.writeFile('artistas.json', JSON.stringify(artistas, null, 4));
-}
-
 //donde se configuran los endpoints (la API en si)
+
+//ALBUMES
 app.get('/', (req, res) => {
     res.send('Node JS api musical Iván y Gaby');
 });
 
 app.get('/api/album/:nombre', async (req, res) => {
-    const albumes = await readAlbumes();
+    const albumes = await leerAlbumes();
     const album = albumes.find(c => c.nombre === req.params.nombre);
     if (!album) return res.status(404).send('Album no encontrado');
     res.send(album);
 });
 
 app.post('/api/album', async (req, res) => {
-    const albumes = await readAlbumes();
+    const albumes = await leerAlbumes();
     const album = {
         id: albumes.length + 1,
         nombre: req.body.nombre,
@@ -69,22 +52,22 @@ app.post('/api/album', async (req, res) => {
         artistas: req.body.artistas || [],
     };
     albumes.push(album);
-    await saveAlbumes(albumes);
+    await guardarAlbumes(albumes);
     res.send(album);
 });
 
 app.delete('/api/album/:nombre', async (req, res) => {
-    const albumes = await readAlbumes();
+    let albumes = await leerAlbumes();
     const album = albumes.find(c => c.nombre === req.params.nombre);
     if (!album) return res.status(404).send('Album no encontrado');
 
     albumes = albumes.filter(c => c.nombre !== album.nombre);
-    await saveAlbumes(albumes);
+    await guardarAlbumes(albumes);
     res.send(album);
 });
 
 app.patch('/api/album/:nombre', async (req, res) => {
-    const albumes = await readAlbumes();
+    const albumes = await leerAlbumes();
     const album = albumes.find(c => c.nombre === req.params.nombre);
     if (!album) return res.status(404).send('Album no encontrado'); 
 
@@ -93,17 +76,24 @@ app.patch('/api/album/:nombre', async (req, res) => {
     if (req.body.año_publicacion !== undefined) album.año_publicacion = parseInt(req.body.año_publicacion);
     if (req.body.artistas !== undefined) album.artistas = req.body.artistas;
 
-    await saveAlbumes(albumes);
+    await guardarAlbumes(albumes);
     res.send(album);
 
 });
 
 //ARTISTAS
+app.get('/api/artista/:id', async (req, res) => {
+    const artistas = await leerArtistas();
+    const artista = artistas.find(c => c.id === parseInt(req.params.id));
+    if (!artista) return res.status(404).send('Artista no encontrado');
+    res.send(artista);
+});
+
 app.post('/api/artista', async (req, res) => {
     const artistas = await leerArtistas();    
     const artista = {
         id: artistas.length + 1,
-        nombre_completo: req.body.nombre_completo,
+        nombre: req.body.nombre,
         año_nacimiento: parseInt(req.body.año_nacimiento),
     };
     //crear nuevo artista
@@ -111,15 +101,15 @@ app.post('/api/artista', async (req, res) => {
     await guardarArtistas(artistas);
     res.send(artista);
 });
-app.delete('/api/artista/:nombre_completo', async (req, res) => {
-    const artistas = await leerArtistas();
-    const {nombre_completo} = req.params;
-    //buscar índice del artista
-    const artista_index = artistas.findIndex(a => a.nombre_completo.toLowerCase() === nombre_completo.toLowerCase());
-    //eliminar el artista que contenga ese indice buscado
-    const artista_eliminado = artistas.splice(artista_index, 1)[0];
+
+app.delete('/api/artista/:nombre', async (req, res) => {
+    let artistas = await leerArtistas();
+    const artista = artistas.find(c => c.nombre === req.params.nombre);
+    if (!artista) return res.status(404).send('Artista no encontrado');
+
+    artistas = artistas.filter(c => c.nombre !== artista.nombre);
     await guardarArtistas(artistas);
-    res.send(artista_eliminado);
+    res.send(artista);
 
 });
 
