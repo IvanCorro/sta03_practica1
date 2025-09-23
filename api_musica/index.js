@@ -34,24 +34,64 @@ async function guardarAlbumes(albumes){
 app.get('/', (req, res) => {
     res.send('Node JS api musical Iván y Gaby');
 });
+
     //ALBUMES
 app.get('/api/album/:nombre', async (req, res) => {
     const albumes = await leerAlbumes();
+    const artistas = await leerArtistas();
     const album = albumes.find(c => c.nombre === req.params.nombre);
+
     if (!album) return res.status(404).send('Album no encontrado');
+
+    for(let i = 0; i < album.artistas.length; i++){
+        let id_artista = album.artistas[i];
+        const artista = artistas.find(c => c.id === id_artista);
+        album.artistas[i] = artista.nombre;
+    }
+
     res.send(album);
 });
 
 app.post('/api/album', async (req, res) => {
     const albumes = await leerAlbumes();
+    let artistas = await leerArtistas();
+
     const album = {
         id: albumes.length + 1,
         nombre: req.body.nombre,
         año_publicacion: parseInt(req.body.año_publicacion),
         artistas: req.body.artistas || [],
     };
+
+    if (albumes.find(c => c.nombre === album.nombre)) return res.status(405).send('Ese album ya está registrado');
+
+    for(let i = 0; i < album.artistas.length; i++){
+        let nombre_artista = album.artistas[i];
+
+        if(artistas.find(c => c.nombre === nombre_artista)){
+            const id_artista = artistas.find(c => c.id === nombre_artista.id);
+            album.artistas[i] = id_artista;
+        }else{
+            const artista = {
+                id: artistas.length + 1,
+                nombre: nombre_artista,
+                año_nacimiento: 0,
+            };
+            album.artistas[i] = artista.id;
+            artistas.push(artista);
+            await guardarArtistas(artistas);
+        }
+    }
+
     albumes.push(album);
     await guardarAlbumes(albumes);
+    
+    for(let i = 0; i < album.artistas.length; i++){
+        let id_artista = album.artistas[i];
+        const artista = artistas.find(c => c.id === id_artista);
+        album.artistas[i] = artista.nombre;
+    }
+
     res.send(album);
 });
 
@@ -123,8 +163,9 @@ app.patch('/api/artista/:nombre', async (req, res) => {
     await guardarArtistas(artistas);
     res.send(artista);
 });
+
 //establecer los puertos por los que accederemos
 const port = process.env.port || 80;
-app.listen(port, () => console.log(`Listening - port ${port}`));
+app.listen(port, () => console.log(`Escuchando en puerto ${port}`));
 
 //luego pongo node index.js y voy a postman y hago la peticion de lo que quiero http://localhost/api/..
