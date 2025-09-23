@@ -119,7 +119,6 @@ app.patch('/api/artista/:nombre', async (req, res) => {
 
     if (req.body.nombre !== undefined) artista.nombre = req.body.nombre;
     if (req.body.año_nacimiento !== undefined) artista.año_nacimiento = parseInt(req.body.año_nacimiento);
-    if (req.body.artistas !== undefined) artista.artistas = req.body.artistas;
 
     await guardarArtistas(artistas);
     res.send(artista);
