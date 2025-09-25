@@ -1,32 +1,67 @@
 [
   {
     "id": 1,
-    "nombre": "Thriller",
-    "año_publicacion": 1982,
-    "artistas": [1, 2]
+    "nombre": "Dtmf",
+    "año_publicacion": 2025,
+    "artistas": [
+      1
+    ]
   },
   {
     "id": 2,
-    "nombre": "The Dark Side of the Moon",
-    "año_publicacion": 1973,
-    "artistas": [3]
+    "nombre": "Saturno",
+    "año_publicacion": 2022,
+    "artistas": [
+      2
+    ]
   },
   {
     "id": 3,
-    "nombre": "Abbey Road",
-    "año_publicacion": 1969,
-    "artistas": [4]
+    "nombre": "Data",
+    "año_publicacion": 2023,
+    "artistas": [
+      3
+    ]
   },
   {
     "id": 4,
-    "nombre": "Bad",
-    "año_publicacion": 1987,
-    "artistas": [1]
+    "nombre": "Mazorkeo.com",
+    "año_publicacion": 2024,
+    "artistas": [
+      4,
+      5
+    ]
   },
   {
     "id": 5,
-    "nombre": "The Wall",
-    "año_publicacion": 1979,
-    "artistas": [3]
+    "nombre": "Destino 2014",
+    "año_publicacion": 1973,
+    "artistas": [
+      6
+    ]
+  },
+  {
+    "id": 6,
+    "nombre": "El Secreto",
+    "año_publicacion": 1973,
+    "artistas": [
+      7
+    ]
+  },
+  {
+    "id": 7,
+    "nombre": "YHLQMDLG",
+    "año_publicacion": 1973,
+    "artistas": [
+      1
+    ]
+  },
+  {
+    "id": 8,
+    "nombre": "MOTOMAMI",
+    "año_publicacion": 1973,
+    "artistas": [
+      8
+    ]
   }
 ]

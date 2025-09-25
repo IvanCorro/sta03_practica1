@@ -5,28 +5,28 @@ const app = express();
 app.use(express.json());
 
 async function leerArtistas(){
-    await fs.access('artistas.json')
-    const data = await fs.readFile('artistas.json', 'utf8');
+    await fs.access('./data/artistas.json')
+    const data = await fs.readFile('./data/artistas.json', 'utf8');
     const artistas = JSON.parse(data);
     return artistas;
 }
 
 async function guardarArtistas(artistas){
-    await fs.access('artistas.json');
+    await fs.access('./data/artistas.json');
     const data = JSON.stringify(artistas, null, 2);
-    await fs.writeFile('artistas.json', data, 'utf8');
+    await fs.writeFile('./data/artistas.json', data, 'utf8');
 }
 async function leerAlbumes(){
-    await fs.access('albumes.json')
-    const data = await fs.readFile('albumes.json', 'utf8');
+    await fs.access('./data/albumes.json')
+    const data = await fs.readFile('./data/albumes.json', 'utf8');
     const albumes = JSON.parse(data);
     return albumes;
 }
 
 async function guardarAlbumes(albumes){
-    await fs.access('albumes.json');
+    await fs.access('./data/albumes.json');
     const data = JSON.stringify(albumes, null, 2);
-    await fs.writeFile('albumes.json', data, 'utf8');
+    await fs.writeFile('./data/albumes.json', data, 'utf8');
 }
 
 //donde se configuran los endpoints (la API en si)
@@ -53,7 +53,7 @@ app.get('/api/album/:nombre', async (req, res) => {
 });
 
 app.post('/api/album', async (req, res) => {
-    const albumes = await leerAlbumes();
+    let albumes = await leerAlbumes();
     let artistas = await leerArtistas();
 
     const album = {
@@ -69,7 +69,8 @@ app.post('/api/album', async (req, res) => {
         let nombre_artista = album.artistas[i];
 
         if(artistas.find(c => c.nombre === nombre_artista)){
-            const id_artista = artistas.find(c => c.id === nombre_artista.id);
+            const artista_elegido = artistas.find(c => c.nombre === nombre_artista);
+            let id_artista = artista_elegido.id;
             album.artistas[i] = id_artista;
         }else{
             const artista = {
@@ -85,13 +86,6 @@ app.post('/api/album', async (req, res) => {
 
     albumes.push(album);
     await guardarAlbumes(albumes);
-    
-    for(let i = 0; i < album.artistas.length; i++){
-        let id_artista = album.artistas[i];
-        const artista = artistas.find(c => c.id === id_artista);
-        album.artistas[i] = artista.nombre;
-    }
-
     res.send(album);
 });
 
