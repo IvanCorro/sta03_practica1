@@ -40,13 +40,14 @@ app.get('/api/album', async (req, res) => {
     res.send(albumes);
 });
 
-app.get('/api/album/:nombre', async (req, res) => {
+app.get('/api/album/:id', async (req, res) => {
     const albumes = await leerAlbumes();
     const artistas = await leerArtistas();
-    const album = albumes.find(c => c.nombre === req.params.nombre);
+    const album = albumes.find(c => c.id === parseInt(req.params.id));
 
-    if (!album) return res.status(404).send('Album no encontrado');
+    if (!album) return res.status(404).send('Álbum no encontrado');
 
+    // Procesar artistas
     for(let i = 0; i < album.artistas.length; i++){
         let id_artista = album.artistas[i];
         const artista = artistas.find(c => c.id === id_artista);
@@ -54,6 +55,31 @@ app.get('/api/album/:nombre', async (req, res) => {
     }
 
     res.send(album);
+});
+
+app.get('/api/album', async (req, res) => {
+    const albumes = await leerAlbumes();
+    const artistas = await leerArtistas();
+    const search = req.query.search; //obtiene el parámetro de búsqueda de la URL (?search=valor)
+
+    if (!search) {
+        return res.status(400).send('Parámetro "search" requerido');
+    }
+
+    const albumesFiltrados = albumes.filter(album => 
+        album.nombre.toLowerCase().includes(search.toLowerCase())
+    ); //busca el album que coincida con la búsqueda
+
+    //Procesar artistas para cada álbum para que no salga 
+    albumesFiltrados.forEach(album => {
+        for(let i = 0; i < album.artistas.length; i++){
+            let id_artista = album.artistas[i];
+            const artista = artistas.find(c => c.id === id_artista);
+            album.artistas[i] = artista.nombre;
+        }
+    });
+
+    res.send(albumesFiltrados);
 });
 
 app.post('/api/album', async (req, res) => {
@@ -93,12 +119,12 @@ app.post('/api/album', async (req, res) => {
     res.send(album);
 });
 
-app.delete('/api/album/:nombre', async (req, res) => {
+app.delete('/api/album/:id', async (req, res) => {
     let albumes = await leerAlbumes();
-    const album = albumes.find(c => c.nombre === req.params.nombre);
+    const album = albumes.find(c => c.id === parseInt(req.params.id));
     if (!album) return res.status(404).send('Album no encontrado');
 
-    albumes = albumes.filter(c => c.nombre !== album.nombre);
+    albumes = albumes.filter(c => c.id !== album.id);
     await guardarAlbumes(albumes);
     res.send(album);
 });
@@ -130,6 +156,17 @@ app.get('/api/artista/:id', async (req, res) => {
     if (!artista) return res.status(404).send('Artista no encontrado');
     res.send(artista);
 });
+app.get('/api/artista', async (req, res) => { //con lo del search
+    const artistas = await leerArtistas();
+    const search = req.query.search;
+    if (!search) {
+        return res.send(artistas);
+    }
+    const artistasFiltrados = artistas.filter(artista => 
+        artista.nombre.toLowerCase().includes(search.toLowerCase())
+    );
+    res.send(artistasFiltrados);
+});
 
 app.post('/api/artista', async (req, res) => {
     const artistas = await leerArtistas();    
@@ -144,12 +181,12 @@ app.post('/api/artista', async (req, res) => {
     res.send(artista);
 });
 
-app.delete('/api/artista/:nombre', async (req, res) => {
+app.delete('/api/artista/:id', async (req, res) => {
     let artistas = await leerArtistas();
-    const artista = artistas.find(c => c.nombre === req.params.nombre);
+    const artista = artistas.find(c => c.nombre === parseInt(req.params.id));
     if (!artista) return res.status(404).send('Artista no encontrado');
 
-    artistas = artistas.filter(c => c.nombre !== artista.nombre);
+    artistas = artistas.filter(c => c.id !== artista.id);
    
     await guardarArtistas(artistas);
     res.send(artista);
