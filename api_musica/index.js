@@ -29,13 +29,17 @@ async function guardarAlbumes(albumes){
     await fs.writeFile('./data/albumes.json', data, 'utf8');
 }
 
-//donde se configuran los endpoints (la API en si)
-
+//Donde se configuran los endpoints (la API en si)
 app.get('/', (req, res) => {
     res.send('Node JS api musical Iván y Gaby');
 });
 
-    //ALBUMES
+//ALBUMES
+app.get('/api/album', async (req, res) => {
+    const albumes = await leerAlbumes();
+    res.send(albumes);
+});
+
 app.get('/api/album/:nombre', async (req, res) => {
     const albumes = await leerAlbumes();
     const artistas = await leerArtistas();
@@ -114,7 +118,12 @@ app.patch('/api/album/:nombre', async (req, res) => {
 
 });
 
-    //ARTISTAS
+//ARTISTAS
+app.get('/api/artista', async (req, res) => {
+    const artistas = await leerArtistas();
+    res.send(artistas);
+});
+
 app.get('/api/artista/:id', async (req, res) => {
     const artistas = await leerArtistas();
     const artista = artistas.find(c => c.id === parseInt(req.params.id));
@@ -159,7 +168,7 @@ app.patch('/api/artista/:nombre', async (req, res) => {
 });
 
 //establecer los puertos por los que accederemos
-const port = process.env.port || 80;
+const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Escuchando en puerto ${port}`));
 
 //luego pongo node index.js y voy a postman y hago la peticion de lo que quiero http://localhost/api/..
