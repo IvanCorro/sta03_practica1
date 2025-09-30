@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Album.css';
 
-function Album({ nombre, año_publicacion, artistas }) {
+function Album({ nombre, año_publicacion }) {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
@@ -18,7 +18,6 @@ function Album({ nombre, año_publicacion, artistas }) {
       {showInfo && (
         <div className="album-info">
           <p><strong>Año publicación:</strong> {año_publicacion}</p>
-          <p><strong>Artistas:</strong> {artistas.join(', ')}</p>
         </div>
       )}
     </div>
