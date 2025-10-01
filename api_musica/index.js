@@ -1,8 +1,14 @@
 const express = require('express');
 const fs = require('fs').promises;
+const cors = require('cors'); // <-- importar cors
 const app = express();
 
 app.use(express.json());
+
+// Habilitar CORS para tu frontend
+app.use(cors({
+    origin: 'http://localhost:5173' // Cambia esto si tu frontend tiene otro puerto
+}));
 
 async function leerArtistas(){
     await fs.access('./data/artistas.json')
